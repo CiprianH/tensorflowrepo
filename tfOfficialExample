@@ -147,18 +147,46 @@ for x, y in val_univariate.take(3):
                     simple_lstm_model.predict(x)[0]], 0, 'Simple LSTM model')
   plot.show()
 
-for xx, yy in val_univariate.take(2):
-    print(xx[0].numpy())
-    print('\n')
-    print(xx[0])
-    print('\n')
-    print(xx)
+toPredict = tf.Variable([[0.642228  ],
+     [0.63643877],
+     [0.63643877],
+     [0.63643877],
+     [0.63643877],
+     [0.63643877],
+     [0.63643877],
+     [0.63643877],
+     [0.63180738],
+     [0.62949169],
+     [0.62949169],
+     [0.62601815],
+     [0.62138676],
+     [0.61907107],
+     [0.61328183],
+     [0.6074926 ],
+     [0.60633475],
+     [0.60401906],
+     [0.60054552],
+     [0.60054552]], shape=(20, 1), dtype=float32, name='input')
     
-    print(yy[0].numpy())
-    print('\n')
-    print(yy[0])
-    print('\n')
-    print(yy)
+print(toPredict)
+    
+#for x, y in val_univariate.take(3):
+#  plot = show_plot([x[0].numpy(), y[0].numpy(),
+#                    simple_lstm_model.predict(toPredict), 0, 'Simple LSTM model')
+#  plot.show()
+
+#for xx, yy in val_univariate.take(2):
+#    print(xx[0].numpy())
+#    print('\n')
+#    print(xx[0])
+#    print('\n')
+#    print(xx)
+#    
+#    print(yy[0].numpy())
+#    print('\n')
+#    print(yy[0])
+#    print('\n')
+#    print(yy)
 
 
 
