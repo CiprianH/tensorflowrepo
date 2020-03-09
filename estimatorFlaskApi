@@ -166,7 +166,7 @@ for x, y in val_univariate.take(1):
   print('calculated: ')
   print((simple_lstm_model.predict(toPredict)[0] * uni_train_std) + uni_train_mean)
 
-@app.route('/<int:input_value>', methods = ['GET'])
+@app.route('/<int:input_value>', methods = ['GET', 'POST'])
 def get(input_value):
     response = {}
     response['input'] = input_value
