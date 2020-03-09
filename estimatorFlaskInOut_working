@@ -71,33 +71,6 @@ x_val_uni, y_val_uni = univariate_data(uni_data, TRAIN_SPLIT, None,
                                        univariate_past_history,
                                        univariate_future_target)
 
-def create_time_steps(length):
-  return list(range(-length, 0))
-
-def show_plot(plot_data, delta, title):
-  labels = ['History', 'True Future', 'Model Prediction']
-  marker = ['.-', 'rx', 'go']
-  time_steps = create_time_steps(plot_data[0].shape[0])
-  if delta:
-    future = delta
-  else:
-    future = 0
-
-  plt.title(title)
-  for i, x in enumerate(plot_data):
-    if i:
-      plt.plot(future, plot_data[i], marker[i], markersize=10,
-               label=labels[i])
-    else:
-      plt.plot(time_steps, plot_data[i].flatten(), marker[i], label=labels[i])
-  plt.legend()
-  plt.xlim([time_steps[0], (future+5)*2])
-  plt.xlabel('Time-Step')
-  return plt
-
-def baseline(history):
-  return np.mean(history)
-
 BATCH_SIZE = 256
 BUFFER_SIZE = 10000
 
@@ -114,7 +87,6 @@ simple_lstm_model = tf.keras.models.Sequential([
 
 simple_lstm_model.compile(optimizer='adam', loss='mae')
 
-
 EVALUATION_INTERVAL = 200
 EPOCHS = 10
 
@@ -123,9 +95,14 @@ simple_lstm_model.fit(train_univariate, epochs=EPOCHS,
                       validation_data=val_univariate, validation_steps=50)
 
 def uni(input):
-    input = (input-uni_train_mean)/uni_train_std
-    input = input.astype(np.float32)
-    return input
+    output = (input-uni_train_mean)/uni_train_std
+    output = output.astype(np.float32)
+    return output
+
+def reverseUni(input):
+    output = input * uni_train_std + uni_train_mean
+    utput = output.astype(np.float32)
+    return output
 
 #input numbers need to have .0 if they are whole number
 @app.route('/<float:a>,<float:b>,<float:c>,<float:d>,<float:e>,<float:f>,<float:g>,<float:h>,<float:i>,<float:j>,<float:k>,<float:l>,<float:m>,<float:n>,<float:o>,<float:p>,<float:q>,<float:r>,<float:s>,<float:t>', methods = ['GET'])
@@ -136,8 +113,7 @@ def get(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t):
 		[uni(i)], [uni(j)], [uni(k)], [uni(l)], [uni(m)], [uni(n)], [uni(o)], [uni(p)],
 		[uni(q)], [uni(r)], [uni(s)], [uni(t)]]], shape=(1, 20, 1), name='inputVariable')
     x = simple_lstm_model.predict(inputToPredict)[0]
-    x = x * uni_train_std + uni_train_mean
-    response['output'] = x.tolist()
+    response['output'] = reverseUni(x).tolist()
     response['status_code'] = 200
     return jsonify(response)
 
