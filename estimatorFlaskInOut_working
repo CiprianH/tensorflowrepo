@@ -20,7 +20,7 @@ app = Flask(__name__)
 mpl.rcParams['figure.figsize'] = (8, 6)
 mpl.rcParams['axes.grid'] = False
 
-df = pd.read_csv("prices-split-reduced.csv")
+df = pd.read_csv("XXBTZEUR.csv")
 
 def univariate_data(dataset, start_index, end_index, history_size, target_size):
   data = []
@@ -43,7 +43,7 @@ tf.random.set_seed(13)
 
 #Forecast a univariate time series
 
-uni_data = df['low']
+uni_data = df['close']
 print(uni_data.shape)
 uni_data.index = df['date']
 
@@ -101,7 +101,7 @@ def uni(input):
 
 def reverseUni(input):
     output = input * uni_train_std + uni_train_mean
-    utput = output.astype(np.float32)
+    output = output.astype(np.float32)
     return output
 
 #input numbers need to have .0 if they are whole number
